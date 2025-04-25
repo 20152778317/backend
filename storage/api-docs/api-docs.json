@@ -1,0 +1,670 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "API Gestión Hoteles",
+        "description": "Documentación de API para la gestión de hoteles, habitaciones y acomodaciones.",
+        "version": "1.0"
+    },
+    "servers": [
+        {
+            "url": "http://localhost:8000",
+            "description": "Servidor local"
+        },
+        {
+            "url": "/api"
+        }
+    ],
+    "paths": {
+        "/api/register": {
+            "post": {
+                "tags": [
+                    "Autenticación"
+                ],
+                "summary": "Registrar un nuevo usuario",
+                "operationId": "8a56853624e025573120a09a4c75d468",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "name",
+                                    "email",
+                                    "password"
+                                ],
+                                "properties": {
+                                    "name": {
+                                        "type": "string",
+                                        "example": "Juan Pérez"
+                                    },
+                                    "email": {
+                                        "type": "string",
+                                        "example": "juan@example.com"
+                                    },
+                                    "password": {
+                                        "type": "string",
+                                        "example": "password123"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Usuario creado con éxito"
+                    },
+                    "422": {
+                        "description": "Errores de validación"
+                    }
+                }
+            }
+        },
+        "/api/login": {
+            "post": {
+                "tags": [
+                    "Autenticación"
+                ],
+                "summary": "Iniciar sesión",
+                "operationId": "a3b306d14572d1f4bd6c064b3233e7b8",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "email",
+                                    "password"
+                                ],
+                                "properties": {
+                                    "email": {
+                                        "type": "string",
+                                        "example": "juan@example.com"
+                                    },
+                                    "password": {
+                                        "type": "string",
+                                        "example": "password123"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Inicio de sesión exitoso"
+                    },
+                    "401": {
+                        "description": "Credenciales incorrectas"
+                    },
+                    "422": {
+                        "description": "Errores de validación"
+                    }
+                }
+            }
+        },
+        "/api/logout": {
+            "post": {
+                "tags": [
+                    "Autenticación"
+                ],
+                "summary": "Cerrar sesión",
+                "operationId": "fe8f3429cd6979b3b4517e186505f9f9",
+                "responses": {
+                    "200": {
+                        "description": "Sesión cerrada exitosamente"
+                    }
+                }
+            }
+        },
+        "/api/habitaciones": {
+            "get": {
+                "tags": [
+                    "Habitaciones"
+                ],
+                "summary": "Listar todas las habitaciones",
+                "operationId": "4b49cbbd8ecc18afb765c90c4e6b4831",
+                "responses": {
+                    "200": {
+                        "description": "Lista de habitaciones",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/Habitacion"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Error en el servidor"
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Habitaciones"
+                ],
+                "summary": "Crear una nueva habitación",
+                "operationId": "cc94829c17c067981877ad89e3ed3e84",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "hotel_id",
+                                    "tipo_habitacion_id",
+                                    "acomodacion_id",
+                                    "cantidad"
+                                ],
+                                "properties": {
+                                    "hotel_id": {
+                                        "type": "integer",
+                                        "example": 1
+                                    },
+                                    "tipo_habitacion_id": {
+                                        "type": "integer",
+                                        "example": 2
+                                    },
+                                    "acomodacion_id": {
+                                        "type": "integer",
+                                        "example": 3
+                                    },
+                                    "cantidad": {
+                                        "type": "integer",
+                                        "example": 5
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Habitación creada con éxito",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Habitacion"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Acomodación no válida para el tipo de habitación"
+                    },
+                    "422": {
+                        "description": "Error de validación"
+                    }
+                }
+            }
+        },
+        "/api/habitaciones/{id}": {
+            "get": {
+                "tags": [
+                    "Habitaciones"
+                ],
+                "summary": "Mostrar una habitación específica",
+                "operationId": "0845386ee6507086931fee84e6f6d0fd",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID de la habitación",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Habitación encontrada",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Habitacion"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Habitación no encontrada"
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                    "Habitaciones"
+                ],
+                "summary": "Actualizar una habitación",
+                "operationId": "7e850c1c54a27cb97ff3981ea90bf1b9",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID de la habitación",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "hotel_id": {
+                                        "type": "integer",
+                                        "example": 1
+                                    },
+                                    "tipo_habitacion_id": {
+                                        "type": "integer",
+                                        "example": 2
+                                    },
+                                    "acomodacion_id": {
+                                        "type": "integer",
+                                        "example": 3
+                                    },
+                                    "cantidad": {
+                                        "type": "integer",
+                                        "example": 5
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Habitación actualizada con éxito",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Habitacion"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Habitación no encontrada"
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "Habitaciones"
+                ],
+                "summary": "Eliminar una habitación",
+                "operationId": "2849719b65498bf1b95516db06df8f3d",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID de la habitación",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Habitación eliminada con éxito"
+                    },
+                    "404": {
+                        "description": "Habitación no encontrada"
+                    }
+                }
+            }
+        },
+        "/api/hoteles": {
+            "get": {
+                "tags": [
+                    "Hoteles"
+                ],
+                "summary": "Listar todos los hoteles",
+                "operationId": "88efeb5bd9555b55dbd8009d2a08d87a",
+                "responses": {
+                    "200": {
+                        "description": "Lista de hoteles",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/Hotel"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Error en el servidor"
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Hoteles"
+                ],
+                "summary": "Crear un nuevo hotel",
+                "operationId": "05eb79906ed2370ac8a6b2dc4c37946a",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "nombre",
+                                    "direccion",
+                                    "ciudad",
+                                    "nit"
+                                ],
+                                "properties": {
+                                    "nombre": {
+                                        "type": "string",
+                                        "example": "Hotel Test"
+                                    },
+                                    "direccion": {
+                                        "type": "string",
+                                        "example": "Calle Ficticia 123"
+                                    },
+                                    "ciudad": {
+                                        "type": "string",
+                                        "example": "Ciudad Ejemplo"
+                                    },
+                                    "nit": {
+                                        "type": "string",
+                                        "example": "123456789"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Hotel creado con éxito",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Hotel"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Error de validación",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "error": {
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/hoteles/{id}": {
+            "get": {
+                "tags": [
+                    "Hoteles"
+                ],
+                "summary": "Mostrar un hotel específico",
+                "operationId": "700f9f1a280d2ca8679b59b0455e6f8b",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID del hotel",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Hotel encontrado",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Hotel"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Hotel no encontrado"
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                    "Hoteles"
+                ],
+                "summary": "Actualizar un hotel",
+                "operationId": "f9cfaba8f53e83675dea4cb9c71378f1",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID del hotel",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "nombre": {
+                                        "type": "string",
+                                        "example": "Hotel Actualizado"
+                                    },
+                                    "direccion": {
+                                        "type": "string",
+                                        "example": "Nueva Calle 456"
+                                    },
+                                    "ciudad": {
+                                        "type": "string",
+                                        "example": "Nueva Ciudad"
+                                    },
+                                    "nit": {
+                                        "type": "string",
+                                        "example": "987654321"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Hotel actualizado con éxito",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Hotel"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Hotel no encontrado"
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "Hoteles"
+                ],
+                "summary": "Eliminar un hotel",
+                "operationId": "04618d16a53b042046dbc03601affeb7",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID del hotel",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Hotel eliminado con éxito"
+                    },
+                    "404": {
+                        "description": "Hotel no encontrado"
+                    }
+                }
+            }
+        },
+        "/api/user": {
+            "get": {
+                "tags": [
+                    "Usuarios"
+                ],
+                "summary": "Obtener el usuario autenticado",
+                "operationId": "a65897868f1d4105404848067624d207",
+                "responses": {
+                    "200": {
+                        "description": "Información del usuario autenticado",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/User"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "No autorizado"
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "Habitacion": {
+                "required": [
+                    "hotel_id",
+                    "tipo_habitacion_id",
+                    "acomodacion_id",
+                    "cantidad"
+                ],
+                "properties": {
+                    "hotel_id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "tipo_habitacion_id": {
+                        "type": "integer",
+                        "example": 2
+                    },
+                    "acomodacion_id": {
+                        "type": "integer",
+                        "example": 3
+                    },
+                    "cantidad": {
+                        "type": "integer",
+                        "example": 5
+                    }
+                },
+                "type": "object"
+            },
+            "Hotel": {
+                "required": [
+                    "id",
+                    "nombre",
+                    "ubicacion",
+                    "descripcion"
+                ],
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "nombre": {
+                        "type": "string",
+                        "example": "Hotel Paraíso"
+                    },
+                    "ubicacion": {
+                        "type": "string",
+                        "example": "Calle Ficticia 123"
+                    },
+                    "descripcion": {
+                        "type": "string",
+                        "example": "Hotel de 5 estrellas con vista al mar"
+                    }
+                },
+                "type": "object"
+            },
+            "User": {
+                "required": [
+                    "id",
+                    "name",
+                    "email"
+                ],
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "name": {
+                        "type": "string",
+                        "example": "Juan Pérez"
+                    },
+                    "email": {
+                        "type": "string",
+                        "example": "juan.perez@ejemplo.com"
+                    }
+                },
+                "type": "object"
+            }
+        }
+    },
+    "tags": [
+        {
+            "name": "Autenticación",
+            "description": "Operaciones de autenticación para el acceso de usuarios"
+        },
+        {
+            "name": "Habitaciones",
+            "description": "Operaciones relacionadas con las habitaciones"
+        },
+        {
+            "name": "Hoteles",
+            "description": "Operaciones relacionadas con los hoteles"
+        },
+        {
+            "name": "Usuarios",
+            "description": "Operaciones relacionadas con los usuarios"
+        }
+    ]
+}
